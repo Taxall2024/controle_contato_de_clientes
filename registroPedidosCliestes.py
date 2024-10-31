@@ -62,7 +62,7 @@ with col1:
     data = st.date_input('Data')
     data_formatada = data.strftime('%d/%m/%Y')
     horario = st.time_input('Horario do contao')
-    motivo = st.selectbox('Motivo :',options=['Cobrança', 'Reclamação','Duvidas'],placeholder='')
+    motivo = st.selectbox('Motivo :',options=['Cobrança', 'Reclamação','Duvidas','Solicitação'],placeholder='')
     responsalve = st.text_input('Responsavel pelo contato')
     observacoes = st.text_area('Observações ')
 
