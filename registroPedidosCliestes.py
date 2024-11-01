@@ -52,14 +52,14 @@ nome_para_cnpj = dict(zip(tabelaDeNomes['nome_cliente'], tabelaDeNomes['cod_cnpj
 
 dataframesParaDownload = []
 tabelaParaRelatorio = []
-nomeEmpresaSelecionada = st.sidebar.selectbox('Selecione a empresa para registro de informações',listaDosNomesDasEmpresas)
-cnpj_selecionado = nome_para_cnpj.get(nomeEmpresaSelecionada, "")
-
 col1, col2 = st.columns(2)
 
 with col1:
     
-    with st.form('formulario'):
+    with st.form('formulario',clear_on_submit=False,border=False):
+        nomeEmpresaSelecionada = st.selectbox('Selecione a empresa para registro de informações',listaDosNomesDasEmpresas)
+        cnpj_selecionado = nome_para_cnpj.get(nomeEmpresaSelecionada, "")
+
         data = st.date_input('Data')
         data_formatada = data.strftime('%d/%m/%Y')
         horario = st.text_input('Horario do contato')
