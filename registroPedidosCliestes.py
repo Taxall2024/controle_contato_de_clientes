@@ -59,46 +59,49 @@ col1, col2 = st.columns(2)
 
 with col1:
     
-    data = st.date_input('Data')
-    data_formatada = data.strftime('%d/%m/%Y')
-    horario = st.time_input('Horario do contao')
-    motivo = st.selectbox('Motivo :',options=['Cobrança', 'Reclamação','Duvidas','Solicitação'],placeholder='')
-    responsalve = st.text_input('Responsavel pelo contato')
-    observacoes = st.text_area('Observações ')
+    with st.form('formulario'):
+        data = st.date_input('Data')
+        data_formatada = data.strftime('%d/%m/%Y')
+        horario = st.text_input('Horario do contato')
+        motivo = st.selectbox('Motivo:', options=['Cobrança', 'Reclamação', 'Duvidas', 'Solicitação'], placeholder='')
+        responsavel = st.text_input('Responsavel pelo contato')
+        observacoes = st.text_area('Observações')
 
-    tabela = {'Data':[data],
-            'Horario':[horario],
-            'Motivo':[motivo],
-            'Responsavel':[responsalve],
-            'Observacoes':[observacoes],
-            'cnpj':[cnpj_selecionado]
-            }
-    tabela_df = pd.DataFrame(tabela)
-    
-    registrar = st.button('Registrar informações')
-    if registrar:
-        try:
-            controler.registrar_contato_clientes(tabela_df,'contato_clientes')
-            st.warning('Dados salvos')
-        except Exception as e:
-            st.warning(e)
+        tabela = {
+            'Data': [data],
+            'Horario': [horario],
+            'Motivo': [motivo],
+            'Responsavel': [responsavel],
+            'Observacoes': [observacoes],
+            'cnpj': [cnpj_selecionado]
+        }
+        tabela_df = pd.DataFrame(tabela)
 
+       
+        registrar = st.form_submit_button('Registrar informações')
+        if registrar:
+            try:
+                controler.registrar_contato_clientes(tabela_df, 'contato_clientes')
+                st.warning('Dados salvos')
+            except Exception as e:
+                st.warning(e)
 
 with col2:
-    with st.form('tabela_para_visualização'):
-        filtro_empresa = st.selectbox('Filtro Empresa',listaDosNomesDasEmpresas)
+    # Create a second form for filtering and displaying data
+    with st.form('tabela_para_visualizacao'):
+        filtro_empresa = st.selectbox('Filtro Empresa', listaDosNomesDasEmpresas)
 
+        # Submit button inside the form
         if st.form_submit_button('Filtrar'):
-            dados_totais_da_tabela =controler.get_all_data('contato_clientes')
+            dados_totais_da_tabela = controler.get_all_data('contato_clientes')
             dados_totais_da_tabela['cnpj'] = dados_totais_da_tabela['cnpj'].astype(str).str[:-2]
             cnpj_selecionado_filtro = nome_para_cnpj.get(filtro_empresa, "")
-            dados_totais_da_tabela = dados_totais_da_tabela[dados_totais_da_tabela['cnpj']==cnpj_selecionado_filtro]
-        
+            dados_totais_da_tabela = dados_totais_da_tabela[dados_totais_da_tabela['cnpj'] == cnpj_selecionado_filtro]
         else:
-            
-            dados_totais_da_tabela =controler.get_all_data('contato_clientes')
-        
+            dados_totais_da_tabela = controler.get_all_data('contato_clientes')
+        dados_totais_da_tabela = dados_totais_da_tabela.iloc[:,1:]
         st.dataframe(dados_totais_da_tabela)
+
 
 
 
