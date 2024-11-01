@@ -24,6 +24,7 @@ class dbController():
         port = st.secrets["apiAWS"]["port"]
         self.engine = create_engine(f'postgresql+psycopg2://{username}:{password}@{host}:{port}/jcp', 
                         pool_size=2, max_overflow=1, pool_recycle=5, pool_timeout=10, pool_pre_ping=True, pool_use_lifo=True)                                
+        
 
         self.conn = self.engine.connect()
 
@@ -149,6 +150,17 @@ class dbController():
         print(f'Os valores para tabela {tabela} e CNPJ {cnpj} foram DELETADOS!')
         self.conn.commit()
         self.closeCons()
+
+
+    def deletarDadosDaTabelaPor_Id(self, id, tabela):
+        # Use parameterized query to avoid SQL injection and properly handle data types
+        self.engine
+        self.conn = self.engine.connect()
+        query = text(f"DELETE FROM {tabela} WHERE \"id\" = :id")
+        self.conn.execute(query, {"id": id})
+        print(f'Os valores para tabela {tabela} e CNPJ {id} foram DELETADOS!')
+        self.conn.commit()
+        self.closeCons()    
 
 
     def get_all_data(self,tabela):

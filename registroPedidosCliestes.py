@@ -55,16 +55,17 @@ tabelaParaRelatorio = []
 col1, col2 = st.columns(2)
 
 with col1:
-    
+    nomeEmpresaSelecionada = st.selectbox('Selecione a empresa para registro de informações',listaDosNomesDasEmpresas)
+    cnpj_selecionado = nome_para_cnpj.get(nomeEmpresaSelecionada, "")
+    st.write(f'CNPJ : {cnpj_selecionado}')
     with st.form('formulario',clear_on_submit=False,border=False):
-        nomeEmpresaSelecionada = st.selectbox('Selecione a empresa para registro de informações',listaDosNomesDasEmpresas)
-        cnpj_selecionado = nome_para_cnpj.get(nomeEmpresaSelecionada, "")
 
         data = st.date_input('Data')
         data_formatada = data.strftime('%d/%m/%Y')
         horario = st.text_input('Horario do contato')
         motivo = st.selectbox('Motivo:', options=['Cobrança', 'Reclamação', 'Duvidas', 'Solicitação'], placeholder='')
         responsavel = st.text_input('Responsavel pelo contato')
+        forma_de_contato = st.selectbox('Forma de contato ',options=['Bitrix','Whatsapp','E-mail'])
         observacoes = st.text_area('Observações')
 
         tabela = {
@@ -73,6 +74,7 @@ with col1:
             'Motivo': [motivo],
             'Responsavel': [responsavel],
             'Observacoes': [observacoes],
+            'Forma_de_contato':[forma_de_contato],
             'cnpj': [cnpj_selecionado]
         }
         tabela_df = pd.DataFrame(tabela)
@@ -99,9 +101,12 @@ with col2:
             dados_totais_da_tabela = dados_totais_da_tabela[dados_totais_da_tabela['cnpj'] == cnpj_selecionado_filtro]
         else:
             dados_totais_da_tabela = controler.get_all_data('contato_clientes')
-        dados_totais_da_tabela = dados_totais_da_tabela.iloc[:,1:]
+        dados_totais_da_tabela = dados_totais_da_tabela.iloc[:,1:].set_index('id')
         st.dataframe(dados_totais_da_tabela)
 
-
+    with st.form('Alterações',border=False):
+        id = st.text_input('Coloque o ID')
+        if st.form_submit_button('Deletar informação'):
+            controler.deletarDadosDaTabelaPor_Id(id,'contato_clientes')
 
 
