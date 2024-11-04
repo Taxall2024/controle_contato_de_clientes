@@ -162,7 +162,7 @@ class dbController():
         self.conn.commit()
         self.closeCons()    
 
-
+    @functools.lru_cache()
     def get_all_data(self,tabela):
         query = f"SELECT * FROM {tabela}"
         
