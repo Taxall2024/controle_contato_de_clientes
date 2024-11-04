@@ -32,7 +32,7 @@ class RegistroContatoClientes():
     
         url = 'postgresql+psycopg2://postgres:djgr27041965@localhost:5432/db_compensacao'
 
-        bx24 = Bitrix24(f'{st.secrets['Bitrix']["api_con"]}')
+        bx24 = Bitrix24(f'{st.secrets["Bitrix"]["api_con"]}')
 
        
         data = bx24.callMethod('crm.company.list', select=['ID', 'TITLE', 'UF_CRM_1634750723', 'UF_CRM_63580C7CDFB5C', 'UF_CRM_630FC29A707BC', 'UF_CRM_1691072587'], filter={'UF_CRM_1727790100': '360938'})
