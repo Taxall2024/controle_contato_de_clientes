@@ -53,11 +53,18 @@ class RegistroContatoClientes():
             self.df = self.df.sort_values(by = 'nome_cliente')
             self.df['cod_cnpj'] = self.df['cod_cnpj'].str.replace('.','').str.replace('/','').str.replace('-','')
             
+    def get_empresas(self):
+        dados_db = controler.get_all_data('cadastrodasempresas')
+        dados_db.rename(columns={'NomeDaEmpresa':'nome_cliente',
+                                 'CNPJ':'cod_cnpj'},inplace=True)
+        dados_db['cod_cnpj'] = dados_db['cod_cnpj'].astype(str).str[:-2]
 
-
+        self.lista_completa_empresas = pd.concat([self.df,dados_db])
+        
+    
     def generating_data(self):
 
-        tabelaDeNomes = self.df
+        tabelaDeNomes = self.lista_completa_empresas
         listaDosNomesDasEmpresas = list(tabelaDeNomes['nome_cliente'])
         nome_para_cnpj = dict(zip(tabelaDeNomes['nome_cliente'], tabelaDeNomes['cod_cnpj']))
 
@@ -173,6 +180,19 @@ class RegistroContatoClientes():
 
                 st.plotly_chart(fig_forma)
 
+    def registrarCliente(self):
+        st.write('Registrar empresa')
+    
+        with st.sidebar.form('Registrar empresa',border=False):
+            cnpj_nova_empresa =st.text_input('CNPJ',placeholder='79283065000141')
+            nome_nova_empresa =st.text_input('Nome')
+            tabela_empresa_nova = pd.DataFrame({'CNPJ':[cnpj_nova_empresa],
+                                                'NomeDaEmpresa':[nome_nova_empresa]})
+
+            if st.form_submit_button('Salvar'):
+                    controler.registrar_contato_clientes(tabela_empresa_nova,'cadastrodasempresas')
+                    st.success('Empresa salva!')
+                    
 
 
 if __name__=='__main__':
@@ -180,4 +200,6 @@ if __name__=='__main__':
     registroClientes = RegistroContatoClientes()
     registroClientes.get_data()
     registroClientes.clean_data()
+    registroClientes.get_empresas()
     registroClientes.generating_data()
+    registroClientes.registrarCliente()
