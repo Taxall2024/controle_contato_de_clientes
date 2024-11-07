@@ -96,7 +96,8 @@ class RegistroContatoClientes():
                     'Forma_de_contato':[forma_de_contato],
                     'cnpj': [cnpj_selecionado],
                     'Resolucao': [resolucao],
-                    'Data_Resolucao': [dataResolucao]
+                    'Data_Resolucao': [dataResolucao],
+                    'nomeEmpresa': [nomeEmpresaSelecionada]
                 }
                 tabela_df = pd.DataFrame(tabela)
 
@@ -123,7 +124,7 @@ class RegistroContatoClientes():
                     dados_totais_da_tabela = dados_totais_da_tabela[dados_totais_da_tabela['cnpj'] == cnpj_selecionado_filtro]
                 else:
                     dados_totais_da_tabela = controler.get_all_data('contato_clientes')
-                dados_totais_da_tabela = dados_totais_da_tabela.iloc[:,1:].set_index('id')
+                dados_totais_da_tabela = dados_totais_da_tabela.iloc[:,[-1,1,2,3,4,5,6,7,8,9,10]].set_index('id')
                 st.dataframe(dados_totais_da_tabela)
 
             with st.form('Alterações',border=False):
@@ -136,12 +137,12 @@ class RegistroContatoClientes():
                     id = st.text_input('ID do registro para atualização')
                     resolucao = st.selectbox('Resolução', options=['Aberto', 'Resolvido'])
                     dataResolucao = st.text_input('Data da resolução')
-
+                    obsResolucao = st.text_area('Observações')
     
                     updateTable = st.form_submit_button('Atualizar informações')
                     if updateTable:
 
-                        controler.update_table(int(id),resolucao,dataResolucao, 'contato_clientes')
+                        controler.update_table(int(id),resolucao,dataResolucao,obsResolucao, 'contato_clientes')
                         st.warning('Dados Alterados')
 
         
@@ -158,45 +159,46 @@ class RegistroContatoClientes():
             st.write('')
             st.write('')
             st.write('')
-            motivo_grafico = dados_totais_da_tabela['Motivo'].value_counts()
-            fig_motivo = px.pie(
-                values=motivo_grafico.values,
-                names=motivo_grafico.index,
-                title="Distribuição de Motivos de Contato"
-            )
-            fig_motivo.update_layout(
-                paper_bgcolor="rgba(0,0,0,0)",  # Fundo do gráfico
-                plot_bgcolor="rgba(0,0,0,0)"    # Fundo da área de plotagem
-            )
-            st.plotly_chart(fig_motivo)
-            
-            with col1:
-                st.write('')
-                st.write('')
-                st.write('')
-                st.write('')
-                st.write('')
-                st.write('')
-                forma_grafico = dados_totais_da_tabela['Forma_de_contato'].value_counts()
-
-                # Gráfico de barras
-                fig_forma = px.bar(
-                    x=forma_grafico.index,
-                    y=forma_grafico.values,
-                    title="Distribuição das Formas de Contato",
-                    labels={'x': 'Forma de Contato', 'y': 'Contagem'}
+            try:
+                motivo_grafico = dados_totais_da_tabela['Motivo'].value_counts()
+                fig_motivo = px.pie(
+                    values=motivo_grafico.values,
+                    names=motivo_grafico.index,
+                    title="Distribuição de Motivos de Contato"
                 )
-
-                # Remover a cor de fundo
-                fig_forma.update_layout(
+                fig_motivo.update_layout(
                     paper_bgcolor="rgba(0,0,0,0)",  # Fundo do gráfico
                     plot_bgcolor="rgba(0,0,0,0)"    # Fundo da área de plotagem
                 )
+                st.plotly_chart(fig_motivo)
+                
+                with col1:
+                    st.write('')
+                    st.write('')
+                    st.write('')
+                    st.write('')
+                    st.write('')
+                    st.write('')
+                    forma_grafico = dados_totais_da_tabela['Forma_de_contato'].value_counts()
 
-                st.plotly_chart(fig_forma)
+                    # Gráfico de barras
+                    fig_forma = px.bar(
+                        x=forma_grafico.index,
+                        y=forma_grafico.values,
+                        title="Distribuição das Formas de Contato",
+                        labels={'x': 'Forma de Contato', 'y': 'Contagem'}
+                    )
 
+                    # Remover a cor de fundo
+                    fig_forma.update_layout(
+                        paper_bgcolor="rgba(0,0,0,0)",  # Fundo do gráfico
+                        plot_bgcolor="rgba(0,0,0,0)"    # Fundo da área de plotagem
+                    )
+
+                    st.plotly_chart(fig_forma)
+            except:
+                pass
     def registrarCliente(self):
-        st.write('Registrar empresa')
     
         with st.sidebar.form('Registrar empresa',border=False):
             cnpj_nova_empresa =st.text_input('CNPJ',placeholder='79283065000141')
