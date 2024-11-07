@@ -85,7 +85,8 @@ class RegistroContatoClientes():
                 responsavel = st.text_input('Responsavel pelo contato')
                 forma_de_contato = st.selectbox('Forma de contato ',options=['Bitrix','Whatsapp','E-mail'])
                 observacoes = st.text_area('Observações')
-
+                resolucao = st.selectbox('Resolução', options=['Aberto','Resolvido'], placeholder='Aberto')
+                dataResolucao = st.text_input('Data da resolução')
                 tabela = {
                     'Data': [data],
                     'Horario': [horario],
@@ -93,7 +94,9 @@ class RegistroContatoClientes():
                     'Responsavel': [responsavel],
                     'Observacoes': [observacoes],
                     'Forma_de_contato':[forma_de_contato],
-                    'cnpj': [cnpj_selecionado]
+                    'cnpj': [cnpj_selecionado],
+                    'Resolucao': [resolucao],
+                    'Data_Resolucao': [dataResolucao]
                 }
                 tabela_df = pd.DataFrame(tabela)
 
@@ -127,7 +130,19 @@ class RegistroContatoClientes():
                 id = st.text_input('Coloque o ID')
                 if st.form_submit_button('Deletar informação'):
                     controler.deletarDadosDaTabelaPor_Id(id,'contato_clientes')
+            
+            with st.expander('Atualizar Informações', expanded=False):
+                with st.form('formularioUpdate', clear_on_submit=False, border=False):
+                    id = st.text_input('ID do registro para atualização')
+                    resolucao = st.selectbox('Resolução', options=['Aberto', 'Resolvido'])
+                    dataResolucao = st.text_input('Data da resolução')
 
+    
+                    updateTable = st.form_submit_button('Atualizar informações')
+                    if updateTable:
+
+                        controler.update_table(int(id),resolucao,dataResolucao, 'contato_clientes')
+                        st.warning('Dados Alterados')
 
         
             st.write('')

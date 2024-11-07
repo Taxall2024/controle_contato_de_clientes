@@ -237,27 +237,30 @@ class dbController():
             
         self.closeCons()
 
-    def update_table(self, tabela, df, cnpj, ano):
-        operations = df['Operation'].unique()
+    def update_table(self, id,resolucao,dataResoluca, table_name):
         self.engine
         self.conn = self.engine.connect()
+        with self.conn.begin():
+            query = text(f"""
+                UPDATE {table_name}
+                SET
+                    "Resolucao" = :resolucao,
+                    "Data_Resolucao" = :dataResoluca
+                WHERE "id" = :id
+            """)
+            self.conn.execute(query, {"id": id, "resolucao": resolucao, "dataResoluca": dataResoluca})
+
+
+            #self.conn.execute(query)
         
-        # Gerenciador de contexto para a transação
-        with self.conn.begin() as transaction:
-           
-                for operation in operations:
-                    value = float(df.loc[df['Operation'] == operation, 'Value'].iloc[0])
-                    query = text(f"UPDATE {tabela} SET \"Value\" = :Value WHERE \"CNPJ\" = :CNPJ AND \"Ano\" = :Ano AND \"Operation\" = :Operation")
-                    params = {'Value': value, 'CNPJ': cnpj, 'Ano': ano, 'Operation': operation}
-                    self.conn.execute(query, params)
-                
         self.closeCons()
+        return "Dados atualizados com sucesso"
 
     def update_table_trimestral(self, tabela, df, cnpj, ano):
         self.engine
         self.conn = self.engine.connect()
         operations = [op for trimestre in [1,2,3,4] for op in df[f'Operation {trimestre}º Trimestre'].unique()]
-    # Gerenciador de contexto para a transação
+
         with self.conn.begin() as transaction:
             
                 for trimestre in [1,2,3,4]:
