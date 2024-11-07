@@ -87,6 +87,8 @@ class RegistroContatoClientes():
                 observacoes = st.text_area('Observações')
                 resolucao = st.selectbox('Resolução', options=['Aberto','Resolvido'], placeholder='Aberto')
                 dataResolucao = st.text_input('Data da resolução')
+                nomeEmpresa = nomeEmpresaSelecionada
+
                 tabela = {
                     'Data': [data],
                     'Horario': [horario],
@@ -97,7 +99,7 @@ class RegistroContatoClientes():
                     'cnpj': [cnpj_selecionado],
                     'Resolucao': [resolucao],
                     'Data_Resolucao': [dataResolucao],
-                    'nomeEmpresa': [nomeEmpresaSelecionada]
+                    'nomeEmpresa': [nomeEmpresa]
                 }
                 tabela_df = pd.DataFrame(tabela)
 
