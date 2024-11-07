@@ -237,7 +237,7 @@ class dbController():
             
         self.closeCons()
 
-    def update_table(self, id,resolucao,dataResoluca, table_name):
+    def update_table(self, id,resolucao,dataResoluca,obsResolucao, table_name):
         self.engine
         self.conn = self.engine.connect()
         with self.conn.begin():
@@ -245,13 +245,12 @@ class dbController():
                 UPDATE {table_name}
                 SET
                     "Resolucao" = :resolucao,
-                    "Data_Resolucao" = :dataResoluca
+                    "Data_Resolucao" = :dataResoluca,
+                    "Obs_resolucao" = :obsResolucao
                 WHERE "id" = :id
             """)
-            self.conn.execute(query, {"id": id, "resolucao": resolucao, "dataResoluca": dataResoluca})
-
-
-            #self.conn.execute(query)
+            self.conn.execute(query, {"id": id, "resolucao": resolucao,
+                                       "dataResoluca": dataResoluca,"obsResolucao":obsResolucao})
         
         self.closeCons()
         return "Dados atualizados com sucesso"
