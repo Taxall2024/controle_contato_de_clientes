@@ -126,7 +126,7 @@ class RegistroContatoClientes():
                     dados_totais_da_tabela = dados_totais_da_tabela[dados_totais_da_tabela['cnpj'] == cnpj_selecionado_filtro]
                 else:
                     dados_totais_da_tabela = controler.get_all_data('contato_clientes')
-                dados_totais_da_tabela = dados_totais_da_tabela.iloc[:,[-1,1,2,3,4,5,6,7,8,9,10]].set_index('id')
+                dados_totais_da_tabela = dados_totais_da_tabela.iloc[:,[-2,1,2,3,4,5,6,7,8,9,11]].set_index('id')
                 st.dataframe(dados_totais_da_tabela)
 
             with st.form('Alterações',border=False):
@@ -138,7 +138,7 @@ class RegistroContatoClientes():
                 with st.form('formularioUpdate', clear_on_submit=False, border=False):
                     id = st.text_input('ID do registro para atualização')
                     resolucao = st.selectbox('Resolução', options=['Aberto', 'Resolvido'])
-                    dataResolucao = st.text_input('Data da resolução')
+                    dataResolucao = st.date_input('Data da resolução')
                     obsResolucao = st.text_area('Observações')
     
                     updateTable = st.form_submit_button('Atualizar informações')
