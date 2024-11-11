@@ -86,7 +86,7 @@ class RegistroContatoClientes():
                 forma_de_contato = st.selectbox('Forma de contato ',options=['Bitrix','Whatsapp','E-mail'])
                 observacoes = st.text_area('Observações')
                 resolucao = st.selectbox('Resolução', options=['Aberto','Resolvido'], placeholder='Aberto')
-                dataResolucao = st.text_input('Data da resolução')
+                dataResolucao = st.date_input('Data da resolução')
                 nomeEmpresa = nomeEmpresaSelecionada
 
                 tabela = {
