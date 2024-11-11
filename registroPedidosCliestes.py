@@ -10,6 +10,10 @@ from bitrix24 import Bitrix24
 import re
 from requests import get
 import functools
+import io
+from io import BytesIO
+
+
 
 from controller import dbController
 
@@ -128,7 +132,12 @@ class RegistroContatoClientes():
                     dados_totais_da_tabela = controler.get_all_data('contato_clientes')
                 dados_totais_da_tabela = dados_totais_da_tabela.iloc[:,[-2,1,2,3,4,5,6,7,8,9,11]].set_index('id')
                 st.dataframe(dados_totais_da_tabela)
-
+            exportar_excel = controler.get_all_data('contato_clientes').iloc[:,[-2,1,2,3,4,5,6,7,8,9,11]]
+            output8 = io.BytesIO()
+            with pd.ExcelWriter(output8, engine='xlsxwriter') as writer:exportar_excel.to_excel(writer,sheet_name=f'contato_clientes', index=False)
+            output8.seek(0)
+            st.download_button(type='primary',label="Exportar tabela ",data=output8,file_name=f"contato_clientes.xlsx",key='download_button')
+    
             with st.form('Alterações',border=False):
                 id = st.text_input('Coloque o ID')
                 if st.form_submit_button('Deletar informação'):
@@ -147,7 +156,6 @@ class RegistroContatoClientes():
                         controler.update_table(int(id),resolucao,dataResolucao,obsResolucao, 'contato_clientes')
                         st.warning('Dados Alterados')
 
-        
             st.write('')
             st.write('')
             st.write('')
