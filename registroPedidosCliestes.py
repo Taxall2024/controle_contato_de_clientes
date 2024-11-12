@@ -85,7 +85,7 @@ class RegistroContatoClientes():
                 data = st.date_input('Data')
                 data_formatada = data.strftime('%d/%m/%Y')
                 horario = st.text_input('Horario do contato')
-                motivo = st.selectbox('Motivo:', options=['Cobrança', 'Reclamação', 'Duvidas', 'Solicitação','Retorno'], placeholder='')
+                motivo = st.selectbox('Motivo:', options=['Cobrança', 'Reclamação', 'Duvidas', 'Solicitação','Retorno','Informação'], placeholder='')
                 responsavel = st.text_input('Responsavel pelo contato')
                 forma_de_contato = st.selectbox('Forma de contato ',options=['Bitrix','Whatsapp','E-mail'])
                 observacoes = st.text_area('Observações')
