@@ -91,6 +91,7 @@ class RegistroContatoClientes():
                 observacoes = st.text_area('Observações')
                 resolucao = st.selectbox('Resolução', options=['Aberto','Resolvido'], placeholder='Aberto')
                 dataResolucao = st.date_input('Data da resolução')
+                setor = st.selectbox('Setor',options=['Financeiro','Comercial','Tributário'],key='setor')
                 nomeEmpresa = nomeEmpresaSelecionada
 
                 tabela = {
@@ -103,7 +104,8 @@ class RegistroContatoClientes():
                     'cnpj': [cnpj_selecionado],
                     'Resolucao': [resolucao],
                     'Data_Resolucao': [dataResolucao],
-                    'nomeEmpresa': [nomeEmpresa]
+                    'nomeEmpresa': [nomeEmpresa],
+                    'setor': [setor]
                 }
                 tabela_df = pd.DataFrame(tabela)
 
@@ -130,9 +132,9 @@ class RegistroContatoClientes():
                     dados_totais_da_tabela = dados_totais_da_tabela[dados_totais_da_tabela['cnpj'] == cnpj_selecionado_filtro]
                 else:
                     dados_totais_da_tabela = controler.get_all_data('contato_clientes')
-                dados_totais_da_tabela = dados_totais_da_tabela.iloc[:,[-2,1,2,3,4,5,6,7,8,9,11]].set_index('id')
+                dados_totais_da_tabela = dados_totais_da_tabela.iloc[:,[-3,1,2,3,4,5,6,7,8,9,11,12]].set_index('id')
                 st.dataframe(dados_totais_da_tabela)
-            exportar_excel = controler.get_all_data('contato_clientes').iloc[:,[-2,1,2,3,4,5,6,7,8,9,11]]
+            exportar_excel = controler.get_all_data('contato_clientes').iloc[:,[-3,1,2,3,4,5,6,7,8,9,11,12]]
             output8 = io.BytesIO()
             with pd.ExcelWriter(output8, engine='xlsxwriter') as writer:exportar_excel.to_excel(writer,sheet_name=f'contato_clientes', index=False)
             output8.seek(0)
@@ -149,11 +151,12 @@ class RegistroContatoClientes():
                     resolucao = st.selectbox('Resolução', options=['Aberto', 'Resolvido'])
                     dataResolucao = st.date_input('Data da resolução')
                     obsResolucao = st.text_area('Observações')
+                    setor = st.selectbox('Setor',options=['Financeiro','Comercial','Tributário'],key='setor_')
     
                     updateTable = st.form_submit_button('Atualizar informações')
                     if updateTable:
 
-                        controler.update_table(int(id),resolucao,dataResolucao,obsResolucao, 'contato_clientes')
+                        controler.update_table(int(id),resolucao,dataResolucao,obsResolucao,setor, 'contato_clientes')
                         st.warning('Dados Alterados')
 
             st.write('')
